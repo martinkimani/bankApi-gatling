@@ -1,0 +1,27 @@
+{
+  "simulation": "com.api.bankApi.perfomance.TransactionSimulation",
+  "simulationId": "transactionsimulation",
+  "start": 1647719241059,
+  "description": "",
+  "scenarios": ["Load Test posting deposits"],
+  "assertions": [
+{
+  "path": "Global",
+  "target": "max of response time",
+  "condition": "is less than",
+  "expectedValues": [200.0],
+  "result": false,
+  "message": "Global: max of response time is less than 200.0",
+  "actualValue": [6497.0]
+},
+{
+  "path": "Global",
+  "target": "percentage of successful events",
+  "condition": "is greater than",
+  "expectedValues": [95.0],
+  "result": true,
+  "message": "Global: percentage of successful events is greater than 95.0",
+  "actualValue": [100.0]
+}
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "simulation": "com.api.bankApi.perfomance.TransactionSimulation",
+  "simulationId": "transactionsimulation",
+  "start": 1647704282490,
+  "description": "",
+  "scenarios": ["Load Test posting deposits"],
+  "assertions": [
+
+  ]
+}
