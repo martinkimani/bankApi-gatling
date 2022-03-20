@@ -55,10 +55,10 @@ public class TransactionSimulation extends Simulation {
         .check(bodyString().not("0")));
         
     public TransactionSimulation() {
-        this.setUp(scn.injectOpen(constantUsersPerSec(60).during(Duration.ofSeconds(60)).randomized()))
+        this.setUp(scn.injectOpen(constantUsersPerSec(40).during(Duration.ofSeconds(60)).randomized()))
         .protocols(httpProtocol)
         .assertions(
-             global().responseTime().max().lt(200),
+             global().responseTime().mean().lt(200),
              global().successfulRequests().percent().gt(95.0)
          );
     }    

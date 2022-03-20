@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
     @Override
     public Mono<BigDecimal> getBalance() {
-        return bankAccountRepository.getAccountBalance().subscribeOn(Schedulers.boundedElastic());
+        return bankAccountRepository.getAccountBalance().publishOn(Schedulers.boundedElastic());
     }
 
     @Override
@@ -39,27 +39,27 @@ public class TransactionServiceImpl implements ITransactionService {
                 .filter(verified -> verified.equalsIgnoreCase("verified"))
                 .flatMap(save -> {
                     var txn = Transaction.builder().amount(transaction.amount()).creationDate(LocalDateTime.now()).reference(transaction.reference())
-                            .transaction_type(Limits.DEPOSIT.toString()).build();
+                        .transaction_type(Limits.DEPOSIT.toString()).build();
                     return transactionRepository.save(txn).publishOn(Schedulers.boundedElastic())
-                            .doOnNext(saved -> updateAccountbalance(saved.getAmount(), "DEPOSIT"))
-                            .map(resp -> "Funds deposited successfully.");
+                        .doOnNext(saved -> updateAccountbalance(saved.getAmount(), "DEPOSIT"))
+                        .map(resp -> "Funds deposited successfully.");
                 });
     }
 
     @Override
     public Mono<String> withdrawFunds(NewTransactionDto transaction) {
         return bankAccountRepository.getAccountBalance()
-                .subscribeOn(Schedulers.boundedElastic())
+                .publishOn(Schedulers.boundedElastic())
                 .filter(bal -> bal.compareTo(transaction.amount()) > 0)
                 .switchIfEmpty(Mono.error(new SystemException("Insufficient funds.")))
                 .flatMap(verify -> verifyTransactionLimits(transaction, Limits.WITHDRAWAL))
                 .filter(verified -> verified.equalsIgnoreCase("verified"))
                 .flatMap(save -> {
                     var txn = Transaction.builder().amount(transaction.amount()).creationDate(LocalDateTime.now()).reference(transaction.reference())
-                            .transaction_type(Limits.WITHDRAWAL.toString()).build();
+                        .transaction_type(Limits.WITHDRAWAL.toString()).build();
                     return transactionRepository.save(txn).publishOn(Schedulers.boundedElastic())
-                            .doOnNext(saved -> updateAccountbalance(saved.getAmount(), "WITHDRAWAL"))
-                            .map(resp -> "Funds Withdrawn successfully");
+                        .doOnNext(saved -> updateAccountbalance(saved.getAmount(), "WITHDRAWAL"))
+                        .map(resp -> "Funds Withdrawn successfully");
                 });
     }
 
