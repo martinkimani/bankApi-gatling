@@ -58,8 +58,8 @@ public class TransactionSimulation extends Simulation {
         this.setUp(scn.injectOpen(constantUsersPerSec(40).during(Duration.ofSeconds(60)).randomized()))
         .protocols(httpProtocol)
         .assertions(
-             global().responseTime().mean().lt(200),
-             global().successfulRequests().percent().gt(95.0)
+             global().responseTime().mean().lt(50),
+             global().successfulRequests().percent().gt(99.0)
          );
     }    
 
